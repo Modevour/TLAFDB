@@ -14,7 +14,7 @@ from nltk.stem.lancaster import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
 file_path = 'E:\\Dataexact\\allhtml'
 file_names = os.listdir(file_path)
-header = ['bitcoin', 'title', 'sort', 'name']
+header = ['name', 'title', 'classify','bitcoin']
 
 
 def get_keywords(pagetext):
@@ -42,7 +42,7 @@ def get_keywords(pagetext):
     for word in words:
         value[word] = round(corpus.tf_idf(word, cleanTokens) * 100, 2)
     rank = sorted(value.items(), key=lambda item: item[1], reverse=True)
-    return rank[0:10]
+    return rank[0:8]
 
 
 def classify(keylist):
@@ -50,131 +50,70 @@ def classify(keylist):
     keylist = re.sub('[0-9]', '', str(keylist)).replace("[('", '').replace("'", '').replace('), (', '').replace(', .)]', '').replace(
         '.', '')
     keymatch_list = []
-    classify_list = [['hackers', 'hacked', 'backdoor', 'malware', 'booter', 'hacker', 'threat', 'cracking', 'debian',
-                      'hacking', 'hack', 'hacks'],
-                     ['cocaine', 'cannabis', 'lsd', 'meth', 'pills', 'drugs', 'drugstore', 'xanax', 'heroin', 'kamagra',
-                      'crystal', 'poison', 'drug', 'psychedelics'],
+    classify_list = [['market','empire','dream','member','products','seller','feedbackshow','vendor'],#市场类
+                     ['hackers', 'hacked', 'backdoor', 'malware', 'hacker', 'threat', 'cracking',
+                      'hacking', 'hack', 'hacks','backdoor','cracking'],#黑客类
+                     ['cocaine', 'cannabis', 'lsd', 'meth', 'pills', 'drugs', 'drugstore', 'xanax', 'heroin',
+                      'crystal', 'poison','poisons', 'drug', 'psychedelics'],#毒品类
                      ['porn', 'pussy', 'lolita', 'livejasmin', 'girls', 'porno', 'sex', 'bitch', 'incest', 'videos',
-                      'views', 'love', 'teen'],
-                     ['ammo', 'guns', 'rifles', 'firearms', 'poudriere', 'armory', 'arms', 'gun', ' pistol', 'cartridge','barrel'],
-                     ['hitman', 'killer', 'hitmen', 'red', 'killing', 'kill', 'blood', 'dead', 'assassination'],
-                     ['bbc', 'news'],
-                     ['forum'],
-                     ['ahmia', 'links', 'link', ' wiki', 'mirror'],
-                     ['cards', 'scam', 'multiescrow', 'scams', 'transfer', 'btc', 'bitcoin', 'counterfeits', 'payment',
-                      'money', 'skrill', 'usd', 'paypal', 'escrow', 'card', 'accounts', 'profit', 'price', 'buy',
-                      'market', 'buyer', 'iphone', 'apple', 'passport', 'services', 'cashout', 'shopping', 'store',
-                      'trading', 'sell'],
-                     ['email', 'e-mail', 'protonmail', 'mail', 'xxmail']]
+                      'love', 'teen'],#色情类
+                     ['ammo', 'guns', 'rifles', 'firearms', 'poudriere', 'armory', 'arms', 'gun', ' pistol',
+                      'cartridge','barrel'],#枪支类
+                     ['hitman', 'killer', 'hitmen', 'red', 'killing', 'kill', 'blood', 'dead', 'assassination'],#谋杀类
+                     ['football','cost','matches','rate','score','scams'],#赌博类
+                     ['forum','insider','topics','information','post','tips'],#论坛类
+                     ['blog'],#博客类
+                     ['bitcoin','wallet','wallets','double','multiply','receive','price','blockchain','amount','10x','100x',
+                      'Doubler','Officially'],#比特币投资类
+                     ['bbc', 'news','company','moreapr'],#新闻类
+                     ['card','cards', 'payment','buy','buyer','send','balance','minimum','maximum','counterfeits',
+                        'paypal','passport'],#贩卡类
+                     ['transfer','perfectmoney','cashout','coinchargebacks','escrow','apple','iphone',
+                      'profit','skrill','usd','trading']]#交易类
+
     try:
         keymatch_list = keylist.split(', ')
         for key in keymatch_list:
-            index_key = keymatch_list.index(key)
-            if key in classify_list[2]:
-                new = keymatch_list.pop(index_key)
-                keymatch_list.insert(0, new)
-        for key in keymatch_list:
-            index_key = keymatch_list.index(key)
-            if key in classify_list[3]:
-                new = keymatch_list.pop(index_key)
-                keymatch_list.insert(0, new)
-        for key in keymatch_list:
-            index_key = keymatch_list.index(key)
-            if key in classify_list[1]:
-                new = keymatch_list.pop(index_key)
-                keymatch_list.insert(0, new)
-        for key in keymatch_list:
             if key in classify_list[0]:
+                tag = 'market'
+                break
+            if key in classify_list[1]:
                 tag = 'hacking'
                 break
-            elif key in classify_list[1]:
+            if key in classify_list[2]:
                 tag = 'drugs'
                 break
-            elif key in classify_list[2]:
+            if key in classify_list[3]:
                 tag = 'porn'
                 break
-            elif key in classify_list[3]:
+            elif key in classify_list[4]:
                 tag = 'gun'
                 break
-            elif key in classify_list[4]:
+            elif key in classify_list[5]:
                 tag = 'kill'
                 break
-            elif key in classify_list[5]:
-                tag = 'news'
-                break
             elif key in classify_list[6]:
+                tag = 'gamble'
+                break
+            elif key in classify_list[7]:
                 tag = 'forum'
                 break
-            # elif key in classify_list[7]:
-            #     tag = 'door'
-            #     break
             elif key in classify_list[8]:
-                tag = 'transaction'
+                tag = 'blog'
                 break
             elif key in classify_list[9]:
-                tag = 'mail'
+                tag = 'btc'
+                break
+            elif key in classify_list[10]:
+                tag = 'news'
+                break
+            elif key in classify_list[11]:
+                tag = 'card'
                 break
             else:
-                tag = 'other'
+                tag = 'transaction'
     except:
         tag = 'error'
-    return tag
-
-
-def classify_tra(title):
-    tag = ''
-    trade_list = [['btc', 'wallet', 'bitcoin', 'bitcoins'],
-                  ['qf', 'cc', 'card', 'cards'],
-                  ['money', 'cash'],
-                  ['paypal']]
-    title_key = []
-    title_list = title.lower().split(' ')
-    for word in title_list:
-        title_key.append(word)
-    for key in title_key:
-        if key in trade_list[0]:
-            tag = 'btc'
-            break
-        elif key in trade_list[1]:
-            tag = 'card'
-            break
-        elif key in trade_list[2]:
-            tag = 'money'
-            break
-        elif key in trade_list[3]:
-            tag = 'paypal'
-            break
-        else:
-            tag = 'transaction'
-    return tag
-
-
-def classify_other(title):
-    tag = ''
-    other_list = [['chat'],
-                  ['search']]
-    title_key = []
-    title_list = title.lower().split(' ')
-    for word in title_list:
-        title_key.append(word)
-    for key in title_key:
-        if key in other_list[0]:
-            tag = 'chat'
-            break
-        elif key in other_list[1]:
-            tag = 'search'
-            break
-        elif len(re.findall('market', str(title_key))) != 0:
-            tag = 'transaction'
-            break
-        elif len(re.findall('bitcoin', str(title_key))) != 0:
-            tag = 'btc'
-            break
-        elif len(re.findall('hack', str(title_key))) != 0:
-            tag = 'hack'
-            break
-        else:
-            tag = 'other'
     return tag
 
 
@@ -193,8 +132,6 @@ def get_info(filename):
             addlist = []
             list1 = []
             validaddress = []
-            list3 = []
-            list4 = []
             finavalidaddress = []
             addr = re.findall(r"[13][a-km-zA-HJ-NP-Z1-9]{25,34}", filedata)
             for addrs in addr:
@@ -238,17 +175,16 @@ def get_info(filename):
                         finavalidaddress.append(lines.strip())
                         print('success')
             for url in dooronions:
-                # if len(url) == 62:
                 countlist.append(url)
             countlist = list(set(countlist))
             if len(countlist) >= 20:
                 if len(finavalidaddress) != 0:
                     info_dic['name'] = filename[i].replace('.html', '')
                     info_dic['title'] = title
-                    info_dic['sort'] = 'door'
+                    info_dic['classify'] = 'door'
                     # info_dic['keys'] = re.sub('[0-9]', '', str(keys)).replace("[('", '').replace("'", '').replace('), (', '').replace(', .)]', '').replace('.', '')
                     info_dic['bitcoin'] = finavalidaddress
-                    csvfile1 = open('validtransactionbtcinfo.csv', 'a+', encoding='utf-8-sig',newline='')
+                    csvfile1 = open('validtransactionbtcinfo.csv', 'a+', encoding='utf-8-sig', newline='')
                     writeobj = csv.DictWriter(csvfile1, fieldnames=header)
                     writeobj.writerow(info_dic)
                     print('success')
@@ -262,15 +198,9 @@ def get_info(filename):
                         info_dic['bitcoin'] = finavalidaddress
                         info_dic['name'] = filename[i].replace('.html', '')
                         info_dic['title'] = title
-                        if tag == 'other':
-                            # info_dic['sort'] = classify_other(title)
-                            tag = classify_other(title)
-                        if tag == 'transaction':
-                            info_dic['sort'] = classify_tra(title)
-                        else:
-                            info_dic['sort'] = tag
+                        info_dic['classify'] = tag
                         # info_dic['keys'] = re.sub('[0-9]', '', str(keys)).replace("[('", '').replace("'", '').replace('), (', '').replace(', .)]', '').replace('.', '')
-                        csvfile = open('validtransactionbtcinfo.csv', 'a+', encoding='utf-8-sig',newline='')
+                        csvfile = open('validtransactionbtcinfo.csv', 'a+', encoding='utf-8-sig', newline='')
                         writeobj = csv.DictWriter(csvfile, fieldnames=header)
                         writeobj.writerow(info_dic)
                         print('successsuccess')

@@ -5,7 +5,7 @@ import re
 # 需要解决正则不到的情况变成一个列表
 
 
-file_path = '/allhtml'
+file_path = 'E:\\Dataexact\\allhtml'
 file_names =os.listdir(file_path)
 finalist = []
 dict = {}

@@ -90,7 +90,7 @@ for unit in nointersaction_list:
         if info_dic['btc'] == line.split(' ')[0]:
             amount = line.split(' ')[1]
             info_dic['amount'] = float(amount)
-    with open(r'allbtcno0000info.csv', 'r', encoding='utf-8-sig') as file:
+    with open(r'validtransactionbtcinfo.csv', 'r', encoding='utf-8-sig') as file:
         reader = csv.DictReader(file)
         for row in reader:
             if len(re.findall(info_dic['btc'], row['bitcoin'])) != 0:
@@ -150,7 +150,7 @@ list_SS2 = sorted(list_SS2, key=lambda dict: dict['amount'])
 list_SS2.reverse()
 new_list_SS = sorted(new_list_SS, key=lambda dict: dict['amount'])
 new_list_SS.reverse()
-csvfile1 = open(r'btclevelrank.csv', 'a+', encoding='utf-8-sig', newline='')
+csvfile1 = open(r'btclevelrank1.csv', 'a+', encoding='utf-8-sig', newline='')
 writeobj = csv.DictWriter(csvfile1, fieldnames=header)
 for info_dic in list_SSS:
     writeobj.writerow(info_dic)

@@ -1,8 +1,8 @@
 from lxml import etree
 import requests
 
-
-with open('btcdata.txt','r',encoding='utf-8') as f:
+#收集比特币地址交易地址
+with open('vaildtransactionaddress.txt','r',encoding='utf-8') as f:
     data = f.readlines()
 for lines in data:
     url = 'https://www.blockchain.com/btc/address/'
